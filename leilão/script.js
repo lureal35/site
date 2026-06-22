@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// ========== CRIAR LEILÃO (CORRIGIDO) ==========
+// ========== CRIAR LEILÃO ==========
 function criarLeilao() {
     if (!usuarioAtual) {
         alert('Faça login primeiro!');
@@ -75,7 +75,6 @@ function criarLeilao() {
     const preco = parseFloat(precoInput.value.replace(',', '.'));
     const duracao = parseInt(document.getElementById('tempoLeilao').value) || 5;
 
-    // Validação melhorada
     if (!nome) {
         mostrarFeedback('Digite o nome do produto!', 'error');
         return;
@@ -118,7 +117,6 @@ function criarLeilao() {
     
     mostrarFeedback('✅ Produto anunciado com sucesso!', 'success');
     
-    // Redirecionar para a página principal após 1.5 segundos
     setTimeout(() => {
         window.location.href = 'index.html';
     }, 1500);

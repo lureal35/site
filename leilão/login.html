@@ -132,6 +132,11 @@
             font-size: 13px;
         }
 
+        @keyframes pulse-icon {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1) rotate(-5deg); }
+        }
+
         @media (max-width: 480px) {
             .login-card {
                 padding: 30px 20px;

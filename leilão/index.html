@@ -6,6 +6,21 @@
     <title>🏆 Royal Auction - Leilões Premium</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        // Redireciona se estiver em uma URL inválida
+        (function() {
+            var path = window.location.pathname;
+            var validPages = ['/', '/index.html', '/anunciar.html', '/login.html'];
+            var isValid = validPages.some(function(p) { return path === p || path.endsWith(p); });
+            
+            if (!isValid && path !== '/404.html') {
+                var page = path.split('/').pop();
+                if (page && page !== '' && validPages.includes('/' + page)) {
+                    window.location.href = '/' + page;
+                }
+            }
+        })();
+    </script>
 </head>
 <body>
     <!-- ========== HEADER ========== -->
