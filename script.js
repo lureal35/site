@@ -790,4 +790,4 @@ document.addEventListener('click', function(e) {
     }
 });
 
-console.log('🏆 Royal Auction carregado com sucesso!');
+console.log('🏆 Lance Livre carregado com sucesso!');
