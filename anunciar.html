@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏆 Royal Auction - Anunciar Produto</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .anunciar-page {
+            min-height: 100vh;
+            background: var(--dark);
+            background-image: 
+                radial-gradient(ellipse at 10% 20%, rgba(108, 60, 225, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 90% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 50%);
+            padding: 20px;
+        }
+
+        .anunciar-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .btn-voltar {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .btn-voltar:hover {
+            color: var(--text-primary);
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border-glass);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .upload-area:hover {
+            border-color: var(--secondary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .upload-area i {
+            font-size: 48px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .upload-area p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .upload-area .highlight-text {
+            color: var(--secondary);
+        }
+
+        .image-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .image-preview-grid img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid var(--border-glass);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .form-group .input-modern {
+            padding-left: 16px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .message {
+            margin-top: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+            animation: fadeInMessage 0.3s ease;
+        }
+
+        .message.success {
+            display: block;
+            background: rgba(0, 230, 118, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(0, 230, 118, 0.3);
+        }
+
+        .message.error {
+            display: block;
+            background: rgba(255, 23, 68, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(255, 23, 68, 0.3);
+        }
+
+        .message.info {
+            display: block;
+            background: rgba(0, 212, 255, 0.15);
+            color: var(--secondary);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .message.warning {
+            display: block;
+            background: rgba(255, 214, 0, 0.15);
+            color: var(--warning);
+            border: 1px solid rgba(255, 214, 0, 0.3);
+        }
+
+        @keyframes fadeInMessage {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn-anunciar {
+            background: linear-gradient(135deg, #FF6D00, #FF9100);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 109, 0, 0.3);
+            width: 100%;
+            padding: 16px 28px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-anunciar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 109, 0, 0.5);
+        }
+
+        .btn-anunciar:active {
+            transform: translateY(0);
+        }
+
+        .btn-anunciar:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .anunciar-page {
+                padding: 12px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .upload-area {
+                padding: 20px;
+            }
+
+            .upload-area i {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="anunciar-page">
+        <div class="anunciar-container">
+            <a href="index.html" class="btn-voltar">
+                <i class="fas fa-arrow-left"></i> Voltar para leilões
+            </a>
+
+            <div class="card glass">
+                <h2><i class="fas fa-box"></i> Anunciar Produto</h2>
+                <p style="color: var(--text-muted); margin-bottom: 24px; font-size: 14px;">
+                    Preencha os dados abaixo para criar um novo leilão.
+                </p>
+
+                <form id="formAnunciar" onsubmit="event.preventDefault(); criarLeilao();">
+                    <div class="form-group">
+                        <label for="produtoNome">Nome do Produto</label>
+                        <div class="input-group">
+                            <i class="fas fa-tag input-icon"></i>
+                            <input type="text" id="produtoNome" placeholder="Ex: iPhone 15 Pro Max" class="input-modern" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="produtoPreco">Preço Inicial (R$)</label>
+                            <div class="input-group">
+                                <i class="fas fa-dollar-sign input-icon"></i>
+                                <input type="number" id="produtoPreco" placeholder="0,00" step="0.01" min="0.01" class="input-modern" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="tempoLeilao">Duração (minutos)</label>
+                            <div class="input-group">
+                                <i class="fas fa-clock input-icon"></i>
+                                <input type="number" id="tempoLeilao" placeholder="5" value="5" min="1" class="input-modern" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Imagens do Produto</label>
+                        <div class="upload-area" onclick="document.getElementById('imagemProduto').click()">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Clique para fazer upload das imagens</p>
+                            <p style="font-size: 12px; color: var(--text-muted);">Suporta JPG, PNG, GIF</p>
+                            <input type="file" id="imagemProduto" accept="image/*" multiple style="display: none;">
+                        </div>
+                        <div id="previewImagem" class="image-preview-grid"></div>
+                    </div>
+
+                    <button type="submit" class="btn-anunciar" id="btnAnunciar">
+                        <i class="fas fa-rocket"></i> Anunciar Produto
+                    </button>
+                </form>
+
+                <div id="mensagemFeedback" class="message"></div>
+            </div>
+
+            <div class="card glass" style="background: rgba(255, 255, 255, 0.02);">
+                <h3 style="font-size: 16px; color: var(--text-secondary); margin-bottom: 12px;">
+                    <i class="fas fa-info-circle" style="color: var(--secondary);"></i> Dicas para seu anúncio
+                </h3>
+                <ul style="color: var(--text-muted); font-size: 14px; list-style: none; padding: 0;">
+                    <li style="padding: 4px 0;">📸 Adicione imagens de alta qualidade</li>
+                    <li style="padding: 4px 0;">💰 Defina um preço inicial justo</li>
+                    <li style="padding: 4px 0;">⏰ Escolha uma duração adequada (5-30 minutos)</li>
+                    <li style="padding: 4px 0;">📝 Descreva bem seu produto</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

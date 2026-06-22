@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏆 Royal Auction - Leilões Premium</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        // Redireciona se estiver em uma URL inválida
+        (function() {
+            var path = window.location.pathname;
+            var validPages = ['/', '/index.html', '/anunciar.html', '/login.html'];
+            var isValid = validPages.some(function(p) { return path === p || path.endsWith(p); });
+            
+            if (!isValid && path !== '/404.html') {
+                var page = path.split('/').pop();
+                if (page && page !== '' && validPages.includes('/' + page)) {
+                    window.location.href = '/' + page;
+                }
+            }
+        })();
+    </script>
+</head>
+<body>
+    <!-- ========== HEADER ========== -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-gavel"></i>
+                <span>Royal<span class="highlight">Auction</span></span>
+            </div>
+            <div class="header-actions">
+                <button onclick="window.location.href='anunciar.html'" class="btn btn-primary" style="padding: 8px 16px; min-width: auto; font-size: 14px;">
+                    <i class="fas fa-plus-circle"></i> Anunciar
+                </button>
+                <button onclick="toggleFavoritos()" class="btn-icon" title="Favoritos">
+                    <i class="fas fa-heart"></i>
+                    <span class="badge-icon" id="favoritosCount">0</span>
+                </button>
+                <button onclick="toggleNotificacoes()" class="btn-icon" title="Notificações">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge-icon" id="notificacoesCount">0</span>
+                </button>
+                <div id="headerUser">
+                    <div style="display: flex; align-items: center; gap: 12px; color: var(--text-secondary);">
+                        <i class="fas fa-user-circle" style="font-size: 24px;"></i>
+                        <span id="userNameDisplay">Carregando...</span>
+                        <button onclick="logout()" class="btn btn-outline" style="padding: 4px 12px; font-size: 12px; min-width: auto;">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========== NOTIFICAÇÕES FLUTUANTES ========== -->
+    <div id="notificacoesContainer" class="notificacoes-container"></div>
+
+    <!-- ========== CONTAINER PRINCIPAL ========== -->
+    <div class="container">
+        <!-- ========== BUSCA E FILTROS ========== -->
+        <div class="card glass">
+            <h2><i class="fas fa-search"></i> Buscar Produtos</h2>
+            <div class="filtros-container">
+                <div class="input-group" style="flex: 2;">
+                    <i class="fas fa-search input-icon"></i>
+                    <input type="text" id="buscaInput" placeholder="Buscar por nome..." class="input-modern" oninput="aplicarFiltros()">
+                </div>
+                <div class="filtros-group">
+                    <select id="filtroStatus" class="input-modern" onchange="aplicarFiltros()" style="padding: 14px 16px;">
+                        <option value="todos">Todos os leilões</option>
+                        <option value="aberto">Abertos</option>
+                        <option value="fechado">Encerrados</option>
+                    </select>
+                    <select id="filtroPreco" class="input-modern" onchange="aplicarFiltros()" style="padding: 14px 16px;">
+                        <option value="todos">Todos os preços</option>
+                        <option value="0-100">Até R$ 100</option>
+                        <option value="100-500">R$ 100 - R$ 500</option>
+                        <option value="500-1000">R$ 500 - R$ 1000</option>
+                        <option value="1000+">Acima de R$ 1000</option>
+                    </select>
+                    <select id="filtroOrdenacao" class="input-modern" onchange="aplicarFiltros()" style="padding: 14px 16px;">
+                        <option value="recentes">Mais recentes</option>
+                        <option value="maior-lance">Maior lance</option>
+                        <option value="menor-lance">Menor lance</option>
+                        <option value="mais-lances">Mais lances</option>
+                    </select>
+                </div>
+            </div>
+            <div id="resultadosBusca" style="margin-top: 12px; color: var(--text-secondary); font-size: 14px;"></div>
+        </div>
+
+        <!-- ========== LISTA DE PRODUTOS ========== -->
+        <div class="card glass">
+            <div class="section-header">
+                <h2><i class="fas fa-list"></i> Produtos em Leilão</h2>
+                <span class="badge" id="totalProdutos">0</span>
+            </div>
+            <div id="listaProdutos" class="product-list"></div>
+        </div>
+
+        <!-- ========== ÁREA DE LANCES ========== -->
+        <div class="card glass" id="areaLance" style="display: none;">
+            <div class="section-header">
+                <h2><i class="fas fa-gavel"></i> Sala de Lances</h2>
+                <button onclick="fecharAreaLance()" class="btn-close-area">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="produtoSelecionado" class="selected-product"></div>
+            
+            <!-- Galeria de imagens -->
+            <div id="galeriaImagens" class="galeria-container"></div>
+
+            <!-- Timer -->
+            <div class="timer-container">
+                <div class="timer-icon">
+                    <i class="fas fa-hourglass-half"></i>
+                </div>
+                <div class="timer-info">
+                    <span class="timer-label">Tempo restante</span>
+                    <span id="timerDisplay" class="timer-display">--:--</span>
+                </div>
+                <div class="timer-bar">
+                    <div id="timerBarProgress" class="timer-bar-progress"></div>
+                </div>
+            </div>
+
+            <!-- Favorito -->
+            <button onclick="toggleFavorito()" id="btnFavorito" class="btn btn-outline" style="width: auto; padding: 10px 20px; margin: 10px 0;">
+                <i class="fas fa-heart"></i> Favoritar
+            </button>
+
+            <!-- Área de lance -->
+            <div class="bid-area">
+                <div class="input-group">
+                    <i class="fas fa-coins input-icon"></i>
+                    <input type="number" id="valorLance" placeholder="Valor do lance (R$)" step="0.01" class="input-modern">
+                </div>
+                <button onclick="darLance()" class="btn btn-bid" id="btnDarLance">
+                    <i class="fas fa-hand-paper"></i> Dar Lance
+                </button>
+            </div>
+
+            <div id="historicoLances" class="history-container"></div>
+            <div id="vencedorContainer" class="winner-container"></div>
+        </div>
+
+        <!-- ========== MODAL FAVORITOS ========== -->
+        <div id="modalFavoritos" class="modal">
+            <div class="modal-content glass">
+                <div class="modal-header">
+                    <h2><i class="fas fa-heart" style="color: #FF1744;"></i> Meus Favoritos</h2>
+                    <button onclick="fecharModalFavoritos()" class="btn-close-area">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div id="listaFavoritos" class="product-list"></div>
+            </div>
+        </div>
+
+        <!-- ========== MODAL NOTIFICAÇÕES ========== -->
+        <div id="modalNotificacoes" class="modal">
+            <div class="modal-content glass">
+                <div class="modal-header">
+                    <h2><i class="fas fa-bell" style="color: #FFD600;"></i> Notificações</h2>
+                    <button onclick="fecharModalNotificacoes()" class="btn-close-area">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div id="listaNotificacoes" class="notificacoes-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>© 2026 Royal Auction - Todos os direitos reservados</p>
+            <div class="footer-social">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
